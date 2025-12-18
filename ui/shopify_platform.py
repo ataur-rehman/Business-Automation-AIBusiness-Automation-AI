@@ -810,10 +810,10 @@ def dashboard_page(shop_domain: str, access_token: str):
     
     # Mock data for today's stats
     import random
-    today_orders = random.randint(8, 25) if orders_count > 0 else 0
+    today_orders = random.randint(2, 12) if orders_count > 0 else 0
     today_revenue = round(today_orders * random.uniform(150, 450), 2) if today_orders > 0 else 0.0
     pending_cod = random.randint(2, 8) if orders_count > 0 else 0
-    ai_tasks = random.randint(45, 120)
+    ai_tasks = random.randint(5, 12)
     
     # Primary metrics - 4 columns
     render_metrics_grid([
