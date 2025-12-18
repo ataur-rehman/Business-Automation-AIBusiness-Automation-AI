@@ -117,20 +117,24 @@ def get_custom_css() -> str:
     
     /* Streamlit native components - white theme overrides */
     .stButton > button {{
-        background: var(--primary) !important;
-        color: white !important;
+        background-color: var(--primary) !important;
+        color: #FFFFFF !important;
         border: none !important;
         font-weight: 500 !important;
+        font-size: 0.875rem !important;
     }}
     
     .stButton > button:hover {{
-        background: var(--primary-hover) !important;
-        color: white !important;
+        background-color: var(--primary-hover) !important;
+        color: #FFFFFF !important;
     }}
     
-    /* Ensure button text is always visible */
-    .stButton button, .stButton button * {{
-        color: white !important;
+    /* Ensure button text is always visible - aggressive override */
+    .stButton button span, 
+    .stButton button div,
+    .stButton button p {{
+        color: #FFFFFF !important;
+        background: transparent !important;
     }}
     
     /* Input fields */
