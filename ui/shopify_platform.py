@@ -319,12 +319,12 @@ async def test_connection(shop_domain: str, access_token: str) -> Dict[str, Any]
         
         result['success'] = True
         result['shop_info'] = {
-            'name': shop.get('name', 'Unknown'),
-            'email': shop.get('email', 'N/A'),
-            'domain': shop.get('domain', 'N/A'),
-            'currency': shop.get('currency', 'N/A'),
-            'country': shop.get('country_name', 'N/A'),
-            'plan': shop.get('plan_name', 'N/A'),
+            'name': shop.name,
+            'email': shop.email,
+            'domain': shop.domain,
+            'currency': shop.currency,
+            'country': shop.country_name if hasattr(shop, 'country_name') else 'N/A',
+            'plan': shop.plan_name if hasattr(shop, 'plan_name') else 'N/A',
         }
         
     except ShopifyAuthError as e:
