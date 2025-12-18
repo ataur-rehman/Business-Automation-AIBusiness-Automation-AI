@@ -1255,10 +1255,11 @@ def products_page(shop_domain: str, access_token: str):
     render_divider()
     render_section_header("Sync Products", "↻")
     
-    col1, col2, col3 = st.columns([1, 1, 2])
+    col1, col2 = st.columns([1, 3])
     with col1:
         sync_limit = st.number_input("Limit", min_value=1, max_value=250, value=50)
     with col2:
+        st.markdown("<br>", unsafe_allow_html=True)  # Align with number input
         if st.button("↻ Sync Now", type="primary", use_container_width=True):
             with st.spinner("Syncing..."):
                 result = run_async(sync_products(shop_domain, access_token, limit=sync_limit))
@@ -1344,7 +1345,7 @@ def products_page(shop_domain: str, access_token: str):
                     st.text(status_display)
                 
                 with col_action:
-                    if st.button("👁", key=f"view_prod_{p.get('id')}", help="View Details"):
+                    if st.button("👁 View", key=f"view_prod_{p.get('id')}", help="View Details", use_container_width=True):
                         st.session_state.selected_product_id = p.get('id')
                         st.session_state.show_product_detail = True
                         st.rerun()
@@ -1749,7 +1750,7 @@ def orders_page(shop_domain: str, access_token: str):
             with col8:
                 st.markdown(f"<small>{ai_data['risk_score']}</small>", unsafe_allow_html=True)
             with col9:
-                if st.button("👁", key=f"view_order_{idx}", help="View Order"):
+                if st.button("👁 View", key=f"view_order_{idx}", help="View Order", use_container_width=True):
                     st.session_state.view_order_id = order_id
                     st.rerun()
             
@@ -1893,7 +1894,11 @@ def order_detail_page(shop_domain: str, access_token: str):
         # AI Order Summary
         st.markdown("**Order Summary**")
         summary_text = f"Order {order.get('name', 'N/A')} placed by {customer_name}. Total amount: ${order.get('total', '0.00')}. Payment status: {order.get('financial_status', 'N/A')}. Fulfillment: {order.get('fulfillment_status', 'unfulfilled') or 'unfulfilled'}. Standard processing time expected."
-        st.text_area("", value=summary_text, height=120, key="ai_summary", label_visibility="collapsed")
+        st.markdown(f'''
+        <div class="card" style="padding: 1rem; background: var(--surface-1); border: 1px solid var(--surface-3); border-radius: var(--radius);">
+            <div style="font-size: 0.875rem; color: var(--text-primary); line-height: 1.5;">{summary_text}</div>
+        </div>
+        ''', unsafe_allow_html=True)
         
         st.markdown("<br>", unsafe_allow_html=True)
         st.markdown("<hr style='border:none; border-top:1px solid #444; margin:0.5rem 0;'>", unsafe_allow_html=True)
@@ -2178,7 +2183,11 @@ Insights:
 • High likelihood of positive review
 • No delivery issues predicted"""
             
-            st.text_area("", value=summary, height=200, label_visibility="collapsed", disabled=True)
+            st.markdown(f'''
+            <div class="card" style="padding: 1rem; background: var(--surface-1); border: 1px solid var(--surface-3); border-radius: var(--radius);">
+                <pre style="margin: 0; font-size: 0.875rem; color: var(--text-primary); white-space: pre-wrap; font-family: {FONTS['primary']};">{summary}</pre>
+            </div>
+            ''', unsafe_allow_html=True)
             
             st.markdown("<br>", unsafe_allow_html=True)
             

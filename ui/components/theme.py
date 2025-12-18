@@ -133,6 +133,24 @@ def get_custom_css() -> str:
         color: var(--text-primary) !important;
         border: 1px solid var(--surface-3) !important;
     }}
+    
+    /* Password visibility toggle button fix */
+    button[kind="icon"], button[title*="Show"], button[title*="Hide"] {{
+        background: transparent !important;
+        color: var(--text-secondary) !important;
+        border: none !important;
+        padding: 0.25rem !important;
+    }}
+    
+    button[kind="icon"]:hover {{
+        color: var(--text-primary) !important;
+        background: var(--surface-2) !important;
+    }}
+    
+    button[kind="icon"] svg {{
+        fill: currentColor !important;
+        color: var(--text-secondary) !important;
+    }}
 
     /* ===========================================
        Streamlit Metric Cards (native)
