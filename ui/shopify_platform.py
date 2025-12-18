@@ -2881,7 +2881,7 @@ def templates_page(shop_domain: str, access_token: str):
             if st.button("💾 Save", type="primary", use_container_width=True):
                 show_toast("Template saved!", "success")
         with col2:
-            if st.button("👁 Preview", use_container_width=True):
+            if st.button("Preview", use_container_width=True):
                 # Show preview with sample data
                 preview = edited_template.format(
                     customer_name="John Doe",

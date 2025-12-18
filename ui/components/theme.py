@@ -120,10 +120,17 @@ def get_custom_css() -> str:
         background: var(--primary) !important;
         color: white !important;
         border: none !important;
+        font-weight: 500 !important;
     }}
     
     .stButton > button:hover {{
         background: var(--primary-hover) !important;
+        color: white !important;
+    }}
+    
+    /* Ensure button text is always visible */
+    .stButton button, .stButton button * {{
+        color: white !important;
     }}
     
     /* Input fields */
@@ -140,6 +147,8 @@ def get_custom_css() -> str:
         color: var(--text-secondary) !important;
         border: none !important;
         padding: 0.25rem !important;
+        min-width: auto !important;
+        width: auto !important;
     }}
     
     button[kind="icon"]:hover {{
@@ -148,8 +157,24 @@ def get_custom_css() -> str:
     }}
     
     button[kind="icon"] svg {{
-        fill: currentColor !important;
+        fill: var(--text-secondary) !important;
+        stroke: var(--text-secondary) !important;
         color: var(--text-secondary) !important;
+        width: 20px !important;
+        height: 20px !important;
+        display: block !important;
+    }}
+    
+    button[kind="icon"]:hover svg {{
+        fill: var(--text-primary) !important;
+        stroke: var(--text-primary) !important;
+    }}
+    
+    /* Fix for Streamlit's eye icon specifically */
+    [data-testid="stTextInput"] button[kind="icon"] {{
+        background: white !important;
+        border: 1px solid var(--surface-3) !important;
+        border-radius: 4px !important;
     }}
 
     /* ===========================================
