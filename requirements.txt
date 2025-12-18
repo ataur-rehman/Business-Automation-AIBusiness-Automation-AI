@@ -1,49 +1,9 @@
-# Backend-only dependencies for Railway deployment
-# Absolutely minimal set - tested and working
+# Frontend-only dependencies for Streamlit Cloud
 
-# Core FastAPI (REQUIRED)
-fastapi==0.115.5
-uvicorn[standard]==0.32.1
-httpx==0.24.1
-python-dotenv==1.0.0
-pydantic==2.10.4
-pydantic-settings==2.7.0
-
-# Logging (REQUIRED)
-loguru==0.7.0
-
-# CORS & requests (REQUIRED)
-requests==2.31.0
-
-# Database (REQUIRED for backend)
-sqlalchemy[asyncio]==2.0.36
-asyncpg==0.30.0
-alembic==1.14.0
-greenlet==3.1.1
-
-# Authentication (REQUIRED)
-python-jose[cryptography]==3.3.0
-passlib[bcrypt]==1.7.4
-cryptography==41.0.7
-
-# AI/LLM (REQUIRED)
-groq==0.9.0
-
-# Background Tasks (OPTIONAL - comment out if not using)
-# celery==5.3.4
-# redis==5.0.1
-
-# Monitoring (OPTIONAL - comment out if not using)  
-# prometheus-client==0.19.0
-# prometheus-fastapi-instrumentator==6.1.0
-
-# File handling (OPTIONAL)
-# python-multipart==0.0.6
-# openpyxl==3.1.0
-
-# Object Storage (OPTIONAL)
-# minio==7.2.0
-
-# Utils
-python-dateutil==2.8.2
-PyYAML==6.0.1
+streamlit==1.29.0
+pandas==2.1.3
+numpy>=1.19.3,<2.0.0  # Streamlit requirement
+python-dotenv==1.1.1
+requests>=2.31.0
+plotly>=5.0.0
+altair>=4.0,<6.0
