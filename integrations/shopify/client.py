@@ -21,40 +21,54 @@ class ShopifyAdminClient:
     """Simple Shopify Admin API client"""
     
     def __init__(self, shop_domain: str, access_token: str):
-        self.shop_domain = shop_domain.replace('https://', '').replace('http://', '')
-        if not self.shop_domain.endswith('.myshopify.com'):
+        # Clean and validate domain
+        self.shop_domain = shop_domain.strip().replace('https://', '').replace('http://', '')
+        
+        # Remove trailing slashes and paths
+        self.shop_domain = self.shop_domain.split('/')[0]
+        
+        # Ensure it ends with .myshopify.com
+        if not self.shop_domain:
+            raise ValueError("Shop domain cannot be empty")
+        
+        if '.myshopify.com' not in self.shop_domain:
+            # If user just provided the shop name, append .myshopify.com
             self.shop_domain = f"{self.shop_domain}.myshopify.com"
         
-        self.access_token = access_token
+        self.access_token = access_token.strip()
         self.base_url = f"https://{self.shop_domain}/admin/api/2024-10"
         
         self.headers = {
-            'X-Shopify-Access-Token': access_token,
+            'X-Shopify-Access-Token': self.access_token,
             'Content-Type': 'application/json'
         }
     
     async def test_connection(self) -> Dict[str, Any]:
         """Test API connection by fetching shop info"""
         try:
-            async with httpx.AsyncClient() as client:
+            async with httpx.AsyncClient(verify=True, follow_redirects=True) as client:
                 response = await client.get(
                     f"{self.base_url}/shop.json",
                     headers=self.headers,
-                    timeout=10.0
+                    timeout=30.0
                 )
                 
                 if response.status_code == 401:
-                    raise ShopifyAuthError("Invalid access token")
+                    raise ShopifyAuthError("Invalid access token. Please check your Admin API access token.")
                 elif response.status_code == 404:
-                    raise ShopifyAuthError("Shop not found")
+                    raise ShopifyAuthError(f"Shop not found. Please verify your domain: {self.shop_domain}")
                 elif response.status_code != 200:
-                    raise ShopifyAPIError(f"API error: {response.status_code}")
+                    raise ShopifyAPIError(f"API error: {response.status_code} - {response.text}")
                 
                 data = response.json()
                 return {
                     'success': True,
                     'shop': data.get('shop', {})
                 }
+        except httpx.ConnectError:
+            raise ShopifyAPIError(f"Cannot connect to {self.shop_domain}. Please verify your shop domain is correct (e.g., your-store.myshopify.com)")
+        except httpx.TimeoutException:
+            raise ShopifyAPIError("Connection timeout. Please try again.")
         except httpx.RequestError as e:
             raise ShopifyAPIError(f"Connection error: {str(e)}")
     
