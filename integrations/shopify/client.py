@@ -1,6 +1,7 @@
 """
 Shopify Admin API Client
 Basic implementation for Streamlit frontend
+Version: 1.0.1
 """
 import httpx
 from typing import Dict, Any, Optional, List
