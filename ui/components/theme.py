@@ -124,8 +124,20 @@ def get_custom_css() -> str:
         font-size: 0.875rem !important;
     }}
     
+    /* Secondary buttons - lighter style */
+    .stButton > button[kind="secondary"] {{
+        background-color: #6B7280 !important;
+        color: #FFFFFF !important;
+        border: 1px solid #9CA3AF !important;
+    }}
+    
     .stButton > button:hover {{
         background-color: var(--primary-hover) !important;
+        color: #FFFFFF !important;
+    }}
+    
+    .stButton > button[kind="secondary"]:hover {{
+        background-color: #4B5563 !important;
         color: #FFFFFF !important;
     }}
     
