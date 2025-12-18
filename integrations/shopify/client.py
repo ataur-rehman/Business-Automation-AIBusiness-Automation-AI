@@ -42,6 +42,21 @@ class ShopifyAdminClient:
             'X-Shopify-Access-Token': self.access_token,
             'Content-Type': 'application/json'
         }
+        self._client = None
+    
+    async def __aenter__(self):
+        """Async context manager entry"""
+        return self
+    
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        """Async context manager exit"""
+        await self.close()
+    
+    async def close(self):
+        """Close any open connections"""
+        if self._client:
+            await self._client.aclose()
+            self._client = None
     
     async def test_connection(self) -> Dict[str, Any]:
         """Test API connection by fetching shop info"""
