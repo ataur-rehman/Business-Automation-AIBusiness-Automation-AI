@@ -224,15 +224,6 @@ load_persisted_state()
 # =============================================================================
 # Helper Functions
 # =============================================================================
-def get_shop_value(shop_info, key: str, default='N/A'):
-    """Safely get value from shop_info whether it's a dict or Pydantic model"""
-    if shop_info is None:
-        return default
-    if isinstance(shop_info, dict):
-        return shop_info.get(key, default)
-    return getattr(shop_info, key, default)
-
-
 def run_async(coro):
     """Run async function in sync context"""
     loop = asyncio.new_event_loop()
@@ -350,15 +341,12 @@ async def sync_products(shop_domain: str, access_token: str, limit: int = 50) ->
     """Sync products from Shopify"""
     from integrations.shopify import ShopifyAdminClient
     
-    result = {'success': False, 'products': [], 'count': 0, 'error': None, 'debug': {}}
+    result = {'success': False, 'products': [], 'count': 0, 'error': None}
     
     try:
         client = ShopifyAdminClient(shop_domain=shop_domain, access_token=access_token)
         products = await client.get_products(limit=limit)
         await client.close()
-        
-        result['debug']['products_fetched'] = len(products)
-        result['debug']['products_type'] = str(type(products))
         
         result['success'] = True
         result['products'] = []
@@ -384,12 +372,9 @@ async def sync_products(shop_domain: str, access_token: str, limit: int = 50) ->
                 'image_url': image_url
             })
         result['count'] = len(products)
-        result['debug']['products_processed'] = len(result['products'])
         
     except Exception as e:
         result['error'] = str(e)
-        result['debug']['exception_type'] = str(type(e).__name__)
-        result['debug']['exception_message'] = str(e)
     
     return result
 
@@ -672,8 +657,7 @@ def show_login_page():
                             if st.session_state.persist_data:
                                 save_persisted_state()
                         
-                        shop_name = get_shop_value(result.get('shop_info'), 'name', 'your store')
-                        show_toast(f"Welcome! Connected to {shop_name}", "success")
+                        show_toast(f"Welcome! Connected to {result.get('shop_info', {}).get('name', 'your store')}", "success")
                         st.rerun()
                     else:
                         show_toast(f"Login failed: {result.get('error', 'Unknown error')}", "error")
@@ -700,7 +684,7 @@ def main():
     
     # Connection status
     is_connected = st.session_state.connection_status and st.session_state.connection_status.get('success', False)
-    shop_name = get_shop_value(st.session_state.shop_info, 'name', '')
+    shop_name = st.session_state.shop_info.get('name', '') if st.session_state.shop_info else ''
     
     # Premium Header
     render_main_header(
@@ -1094,13 +1078,13 @@ def connection_page(shop_domain: str, access_token: str):
                 render_section_header("Store Information", "◐")
                 
                 render_metrics_grid([
-                    {"value": get_shop_value(shop_info, 'name'), "label": "Store", "icon": "◐", "color": "primary"},
-                    {"value": get_shop_value(shop_info, 'domain'), "label": "Domain", "icon": "◉", "color": "info"},
-                    {"value": get_shop_value(shop_info, 'currency'), "label": "Currency", "icon": "◈", "color": "success"},
-                    {"value": get_shop_value(shop_info, 'plan'), "label": "Plan", "icon": "★", "color": "primary"},
+                    {"value": shop_info.get('name', 'N/A'), "label": "Store", "icon": "◐", "color": "primary"},
+                    {"value": shop_info.get('domain', 'N/A'), "label": "Domain", "icon": "◉", "color": "info"},
+                    {"value": shop_info.get('currency', 'N/A'), "label": "Currency", "icon": "◈", "color": "success"},
+                    {"value": shop_info.get('plan', 'N/A'), "label": "Plan", "icon": "★", "color": "primary"},
                 ])
                 
-                add_test_result("Connection Test", True, f"Connected to {get_shop_value(shop_info, 'name')}")
+                add_test_result("Connection Test", True, f"Connected to {shop_info.get('name')}")
             else:
                 show_toast(f"Failed: {result.get('error', 'Unknown')}", "error")
                 add_test_result("Connection Test", False, result.get('error', 'Unknown'))
@@ -2982,12 +2966,12 @@ def settings_page(shop_domain: str, access_token: str):
             with col1:
                 business_name = st.text_input(
                     "Business Name",
-                    value=st.session_state.get('business_name', get_shop_value(st.session_state.shop_info, 'name', '')),
+                    value=st.session_state.get('business_name', st.session_state.shop_info.get('name', '') if st.session_state.shop_info else ''),
                     placeholder="Your Store Name"
                 )
                 business_email = st.text_input(
                     "Contact Email",
-                    value=st.session_state.get('business_email', get_shop_value(st.session_state.shop_info, 'email', '')),
+                    value=st.session_state.get('business_email', st.session_state.shop_info.get('email', '') if st.session_state.shop_info else ''),
                     placeholder="contact@store.com"
                 )
                 business_phone = st.text_input(
@@ -3105,13 +3089,13 @@ def settings_page(shop_domain: str, access_token: str):
                     render_section_header("Store Information", "◐")
                     
                     render_metrics_grid([
-                        {"value": get_shop_value(shop_info, 'name'), "label": "Store", "icon": "◐", "color": "primary"},
-                        {"value": get_shop_value(shop_info, 'domain'), "label": "Domain", "icon": "◉", "color": "info"},
-                        {"value": get_shop_value(shop_info, 'currency'), "label": "Currency", "icon": "◈", "color": "success"},
-                        {"value": get_shop_value(shop_info, 'plan'), "label": "Plan", "icon": "★", "color": "primary"},
+                        {"value": shop_info.get('name', 'N/A'), "label": "Store", "icon": "◐", "color": "primary"},
+                        {"value": shop_info.get('domain', 'N/A'), "label": "Domain", "icon": "◉", "color": "info"},
+                        {"value": shop_info.get('currency', 'N/A'), "label": "Currency", "icon": "◈", "color": "success"},
+                        {"value": shop_info.get('plan', 'N/A'), "label": "Plan", "icon": "★", "color": "primary"},
                     ])
                     
-                    add_test_result("Connection Test", True, f"Connected to {get_shop_value(shop_info, 'name')}")
+                    add_test_result("Connection Test", True, f"Connected to {shop_info.get('name')}")
                 else:
                     show_toast(f"Connection failed: {result.get('error', 'Unknown error')}", "error")
                     add_test_result("Connection Test", False, result.get('error', 'Unknown'))
