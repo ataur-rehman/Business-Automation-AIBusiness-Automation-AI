@@ -8,6 +8,7 @@ from .theme import (
     COLORS,
     SPACING,
     RADIUS,
+    FONTS,
 )
 
 from .widgets import (

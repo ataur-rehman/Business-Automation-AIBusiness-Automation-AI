@@ -37,6 +37,7 @@ from components import (
     get_custom_css,
     COLORS,
     ICONS,
+    FONTS,
     render_main_header,
     render_page_header,
     render_section_header,
