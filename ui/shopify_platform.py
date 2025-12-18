@@ -1346,7 +1346,7 @@ def products_page(shop_domain: str, access_token: str):
                     st.text(status_display)
                 
                 with col_action:
-                    if st.button("👁 View", key=f"view_prod_{p.get('id')}", help="View Details", use_container_width=True):
+                    if st.button("View", key=f"view_prod_{p.get('id')}", help="View Details", use_container_width=True):
                         st.session_state.selected_product_id = p.get('id')
                         st.session_state.show_product_detail = True
                         st.rerun()
@@ -1751,7 +1751,7 @@ def orders_page(shop_domain: str, access_token: str):
             with col8:
                 st.markdown(f"<small>{ai_data['risk_score']}</small>", unsafe_allow_html=True)
             with col9:
-                if st.button("👁 View", key=f"view_order_{idx}", help="View Order", use_container_width=True):
+                if st.button("View", key=f"view_order_{idx}", help="View Order", use_container_width=True):
                     st.session_state.view_order_id = order_id
                     st.rerun()
             
