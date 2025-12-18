@@ -141,12 +141,30 @@ def get_custom_css() -> str:
         color: #FFFFFF !important;
     }}
     
-    /* Ensure button text is always visible - aggressive override */
+    /* Ultra-aggressive button text fix - target everything */
+    .stButton button,
+    .stButton button *,
     .stButton button span, 
     .stButton button div,
-    .stButton button p {{
+    .stButton button p,
+    button[data-testid="baseButton-primary"],
+    button[data-testid="baseButton-secondary"],
+    button[data-testid="baseButton-primary"] *,
+    button[data-testid="baseButton-secondary"] *,
+    [data-testid="stButton"] button,
+    [data-testid="stButton"] button * {{
         color: #FFFFFF !important;
+        fill: #FFFFFF !important;
         background: transparent !important;
+        -webkit-text-fill-color: #FFFFFF !important;
+    }}
+    
+    /* Button background - keep it blue */
+    .stButton > button,
+    button[data-testid="baseButton-primary"],
+    [data-testid="stButton"] > button {{
+        background-color: var(--primary) !important;
+        background: var(--primary) !important;
     }}
     
     /* Input fields */

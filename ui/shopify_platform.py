@@ -1346,8 +1346,8 @@ def products_page(shop_domain: str, access_token: str):
                     st.text(status_display)
                 
                 with col_action:
-                    view_clicked = st.button("View", key=f"view_prod_{p.get('id')}", type="secondary", use_container_width=True)
-                    if view_clicked:
+                    # Use markdown to force white text on buttons
+                    if st.button("View", key=f"view_prod_{p.get('id')}", use_container_width=True):
                         st.session_state.selected_product_id = p.get('id')
                         st.session_state.show_product_detail = True
                         st.rerun()
@@ -1752,8 +1752,7 @@ def orders_page(shop_domain: str, access_token: str):
             with col8:
                 st.markdown(f"<small>{ai_data['risk_score']}</small>", unsafe_allow_html=True)
             with col9:
-                view_clicked = st.button("View", key=f"view_order_{idx}", type="secondary", use_container_width=True)
-                if view_clicked:
+                if st.button("View", key=f"view_order_{idx}", use_container_width=True):
                     st.session_state.view_order_id = order_id
                     st.rerun()
             
@@ -2395,12 +2394,14 @@ Shop now - fast shipping and satisfaction guaranteed!"""
                     else:
                         show_toast(f"Order #{order_number} not found, using provided details", "warning")
                 
+                # Get template key once here for use in both branches
+                template_key = email_types[selected_email_type]
+                
                 template_path = Path(__file__).parent.parent / "generated_templates.json"
                 if template_path.exists():
                     with open(template_path, "r") as f:
                         templates = json.load(f)
                     
-                    template_key = email_types[selected_email_type]
                     template_data = templates.get(email_tone, {}).get("support", {}).get(template_key)
                     
                     # Handle dict structure (email/short/whatsapp) or direct string template
