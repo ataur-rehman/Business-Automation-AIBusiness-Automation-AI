@@ -5,9 +5,21 @@ and webhook handlers for multi-tenant e-commerce automation.
 """
 
 from .client import ShopifyAdminClient, ShopifyAPIError, ShopifyAuthError, ShopifyNotFoundError
-from .service import ShopifyService, create_shopify_service
 from .capability_checker import ShopifyCapabilityChecker, check_shopify_capabilities
-from .schema_generator import ShopifySchemaGenerator, get_shopify_product_schema_summary, get_shopify_order_schema_summary
+
+# Optional imports - only available when backend dependencies are present
+try:
+    from .service import ShopifyService, create_shopify_service
+except ImportError:
+    ShopifyService = None
+    create_shopify_service = None
+
+try:
+    from .schema_generator import ShopifySchemaGenerator, get_shopify_product_schema_summary, get_shopify_order_schema_summary
+except ImportError:
+    ShopifySchemaGenerator = None
+    get_shopify_product_schema_summary = None
+    get_shopify_order_schema_summary = None
 
 # Lazy import for routes to avoid loading heavy FastAPI/database dependencies
 # when only the client is needed (e.g., in Streamlit UI)
