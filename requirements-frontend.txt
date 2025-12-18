@@ -1,0 +1,9 @@
+# Frontend-only dependencies for Streamlit Cloud
+
+streamlit==1.29.0
+pandas==2.1.3
+numpy>=1.19.3,<2.0.0  # Streamlit requirement
+python-dotenv==1.1.1
+requests>=2.31.0
+plotly>=5.0.0
+altair>=4.0,<6.0

@@ -1,0 +1,3 @@
+# System packages needed for Streamlit Cloud frontend
+# Railway backend uses Docker and doesn't need this file
+libpq-dev
