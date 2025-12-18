@@ -666,7 +666,8 @@ def show_login_page():
                             if st.session_state.persist_data:
                                 save_persisted_state()
                         
-                        show_toast(f"Welcome! Connected to {result.get('shop_info', {}).get('name', 'your store')}", "success")
+                        shop_name = get_shop_value(result.get('shop_info'), 'name', 'your store')
+                        show_toast(f"Welcome! Connected to {shop_name}", "success")
                         st.rerun()
                     else:
                         show_toast(f"Login failed: {result.get('error', 'Unknown error')}", "error")
